@@ -1,14 +1,14 @@
 import { Button, Flex, Form, Input } from "antd";
-import { login } from "../api";
+import { register } from "../api";
 
-export const LoginPage = () => {
+export const RegisterPage = () => {
   return (
     <Flex
       justify="center"
       align="center"
       style={{ maxWidth: 500, padding: 20, width: "100%", flex: 1 }}
     >
-      <Form onFinish={(values) => login(values)}>
+      <Form onFinish={(values) => register(values)}>
         <Form.Item name="username" label="Имя">
           <Input />
         </Form.Item>
@@ -17,7 +17,7 @@ export const LoginPage = () => {
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
-            Войти
+            Зарегистрироваться
           </Button>
         </Form.Item>
       </Form>

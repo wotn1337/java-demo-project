@@ -1,5 +1,7 @@
 package BelovAM.config;
 
+import BelovAM.entity.JwtRequestFilter;
+import BelovAM.entity.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import io.jsonwebtoken.*;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @Configuration
@@ -21,6 +25,10 @@ public class SecurityConfig {
 
     @Autowired
     UserDetailsService userDetailsService;
+    @Autowired
+    private JwtRequestFilter jwtRequestFilter;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Bean
     public AuthenticationManager authenticationManager(
@@ -33,31 +41,20 @@ public class SecurityConfig {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 
         authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setPasswordEncoder(passwordEncoder);
 
         return authProvider;
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests((authorize) ->
-//                        authorize.anyRequest().authenticated()
-                        authorize.requestMatchers(HttpMethod.GET, "/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/**").permitAll()
-//                                .requestMatchers("/auth/**").permitAll()
-//                                .anyRequest().authenticated()
-
-                );
-
+                .authorizeRequests(authorize ->
+                        authorize
+                                .requestMatchers("auth/**").permitAll()
+                                .anyRequest().authenticated()
+                )
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-
 }

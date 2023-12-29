@@ -8,13 +8,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
-
+    private final PasswordEncoder encoder;
     private final UserRepository userRepository;
 
     @Override
@@ -31,7 +32,12 @@ public class UserService implements UserDetailsService {
     public User save(RegisterDTO dto) {
         var user = User.builder()
                 .username(dto.getUsername())
-                .password(dto.getPassword())
+                .password(encoder.encode(dto.getPassword()))
+                .enabled(true)
+                .authority("ADMIN")
+                .accountNonLocked(true)
+                .accountNonExpired(true)
+                .credentialsNonExpired(true)
                 .build();
         return userRepository.save(user);
     }

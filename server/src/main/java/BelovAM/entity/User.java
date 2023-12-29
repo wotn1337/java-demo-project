@@ -33,5 +33,4 @@ public class User implements UserDetails {
     public List<GrantedAuthority> getAuthorities() {
         return List.of(() ->authority);
     }
-
 }

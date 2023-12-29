@@ -6,6 +6,7 @@ import { TeamsPage } from "./pages/TeamsPage";
 import { TournamentsPage } from "./pages/TournamentsPage";
 import { LoginPage } from "./pages/LoginPage";
 import { BracketPage } from "./pages/BracketPage";
+import { RegisterPage } from "./pages/RegisterPage";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/bracket/:id" element={<BracketPage />} />
       </Route>
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
       {/* <Route path="*" element={<PageNotFound />} /> */}
     </Routes>
   );

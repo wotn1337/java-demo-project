@@ -6,6 +6,7 @@ import BelovAM.service.PlayerService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/players")
+@PreAuthorize("hasRole('USER')")
 @CrossOrigin(origins = "http://localhost:5173")
 public class PlayerController {
     private final PlayerService playerService;
